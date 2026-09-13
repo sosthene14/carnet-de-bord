@@ -69,9 +69,9 @@ export default function CarnetDeBord() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await window.storage.get(STORAGE_KEY);
-        if (!cancelled && res && res.value) {
-          const parsed = JSON.parse(res.value);
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        if (!cancelled && stored) {
+          const parsed = JSON.parse(stored);
           if (parsed.tasks) setTasks(parsed.tasks);
           if (parsed.weeks) setWeeks(parsed.weeks);
         }
@@ -88,8 +88,8 @@ export default function CarnetDeBord() {
 
   const persist = useCallback(async (nextTasks, nextWeeks) => {
     try {
-      const result = await window.storage.set(STORAGE_KEY, JSON.stringify({ tasks: nextTasks, weeks: nextWeeks }));
-      setSaveError(!result);
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks: nextTasks, weeks: nextWeeks }));
+      setSaveError(false);
     } catch (e) {
       setSaveError(true);
     }
